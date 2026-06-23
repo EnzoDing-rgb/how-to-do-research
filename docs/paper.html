@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>社科研究辅助技能的设计思路</title>
+<style>
+:root {
+  --paper: #fbfaf5; --ink: #111; --muted: #5f5a50; --accent: #6b9fd4;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #fff;
+  color: var(--ink);
+  font-family: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.8;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* Header */
+.paper-header { text-align: center; margin-bottom: 48px; }
+.paper-header h1 {
+  font-size: 1.8rem; font-weight: 700; line-height: 1.4; margin-bottom: 16px;
+}
+.paper-header .meta {
+  font-size: 0.9rem; color: var(--muted);
+}
+
+/* Sections */
+section { margin-bottom: 36px; }
+
+h2 {
+  font-size: 1.25rem; font-weight: 700; margin: 36px 0 14px;
+  padding-bottom: 6px; border-bottom: 1px solid #ddd;
+}
+
+h3 {
+  font-size: 1.05rem; font-weight: 600; margin: 24px 0 10px;
+}
+
+p { margin-bottom: 12px; text-align: justify; }
+
+/* Abstract */
+.abstract {
+  padding: 20px 24px; border: 1px solid #ddd; border-radius: 6px;
+  margin-bottom: 40px; font-size: 0.95rem; background: #fafaf8;
+}
+.abstract h3 { margin-top: 0; font-size: 1rem; text-align: center; }
+
+/* Tables */
+table {
+  width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9rem;
+}
+thead th {
+  border-top: 2px solid #333; border-bottom: 1px solid #333;
+  padding: 8px 10px; text-align: left; font-weight: 600;
+}
+tbody td {
+  border-bottom: 1px solid #ddd; padding: 8px 10px; vertical-align: top;
+}
+tbody tr:last-child td { border-bottom: 2px solid #333; }
+
+/* Lists */
+ol, ul { margin: 8px 0 14px 1.4em; }
+li { margin-bottom: 8px; }
+
+/* Blockquote */
+blockquote {
+  margin: 16px 0; padding: 10px 18px;
+  border-left: 3px solid var(--accent); background: #f8f8f6;
+}
+
+/* Simple flow */
+.flow {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center;
+  margin: 20px 0; font-size: 0.85rem; font-family: monospace;
+}
+.flow span { padding: 6px 10px; border: 1px solid #999; border-radius: 4px; }
+.flow .arr { border: none; color: #999; }
+
+/* Footer */
+.paper-footer {
+  margin-top: 48px; padding-top: 20px; border-top: 1px solid #ddd;
+  font-size: 0.85rem; color: var(--muted);
+}
+
+/* Print */
+@media print {
+  @page { size: A4; margin: 2cm; }
+  body { padding: 0; font-size: 12pt; }
+}
+</style>
+</head>
+<body>
+
+<div class="paper-header">
+  <h1>社科研究辅助技能的设计思路</h1>
+  <p class="meta">Research Assistant v3.2 · 2026 年 6 月</p>
+</div>
+
+<div class="abstract">
+  <h3>摘要</h3>
+  <p>本文介绍一套面向社会科学研究的辅助技能设计。该技能将社科论文的完整生产流程——从问题锚定、文献搜索、初稿撰写到同行评审与修订交付——编排为一条带有质量关卡的管线。设计上提出两项核心方法：语境锚点法（用深度报道为前期理论联想提供脉络支撑）和范文后置校准（将范文从模板角色移出，改为终审阶段的论证对照工具）。同时引入质量关卡与弱点路由机制，使评审发现的问题能够定向修复而非全文重写。整套设计的目标不是替代研究者的判断，而是将可自动化的工序系统化，将研究者的注意力保留在理论选择、论点裁决等不可自动化的判断环节。</p>
+</div>
+
+<!-- ===== 1. 问题 ===== -->
+<section>
+  <h2>一、问题：社科研究中三个容易被忽视的瓶颈</h2>
+
+  <p>社会科学研究的生产流程大致可以概括为几个阶段：确定研究问题、搭建理论框架、检索和整合文献、设计实证方案（如适用）、收集和分析数据（如适用）、撰写初稿、修改完善。这个流程本身并不复杂，但在实际操作中，有三个环节经常会消耗超出预期的时间和精力。</p>
+
+  <h3>1.1 从现象到理论的"跳跃"缺乏依据</h3>
+  <p>一个常见的情形是：研究者对某个社会现象产生了兴趣——比如"短视频平台上出现了大量以'躺平'为主题的内容创作"——但尚未确定应该从哪个理论视角切入。此时如果向 AI 工具提问"帮我找与躺平相关的社会学理论"，得到的往往是一串看似相关但缺乏论证根基的概念列表。原因是 AI 对"躺平"这个词只有训练数据中的词共现知识，没有对具体情境中"谁在什么条件下做了什么"的脉络理解。它不知道这些创作者的社会位置、他们面对的结构性约束、以及他们用"躺平"这个词时究竟在回应什么。</p>
+
+  <h3>1.2 文献检索与论证整合之间的断裂</h3>
+  <p>即使研究者已经完成了文献检索，仍然面临一个组织问题：检索到的几十篇文献如何分配到论文的不同章节？哪些进入文献回顾、哪些支撑概念分析、哪些作为案例的对照？这个整合过程如果缺乏系统性方法，容易出现文献堆砌而非论证推进的结果。</p>
+
+  <h3>1.3 修改阶段的"全文重写"惯性</h3>
+  <p>收到评审意见后，常见的处理方式是让 AI "根据意见修改全文"。这种做法的风险在于：被指出的问题可能只涉及某一个部分（例如文献覆盖不足，或某个论断缺乏限定词），但全文重写会破坏本来已经正确的部分。问题出在缺乏一套定向路由机制——知道什么问题应该回到流程的哪个阶段去修复。</p>
+</section>
+
+<!-- ===== 2. 设计 ===== -->
+<section>
+  <h2>二、设计思路：将研究流程编排为可控的管线</h2>
+
+  <p>针对上述问题，这套技能的设计思路是将社科论文的生产流程拆解为六个阶段，每个阶段有明确的输入、输出和通过标准。管线不是僵化的模板——它允许根据研究类型灵活跳转（例如纯概念分析类论文自动跳过实证设计和数据图表阶段），但每个阶段的质量检查是强制的。</p>
+
+  <div class="flow">
+    <span>Phase 1<br>问题锚定<br>理论发现</span>
+    <span class="arr">→</span>
+    <span>Gate 1</span>
+    <span class="arr">→</span>
+    <span>Phase 2<br>文献搜索</span>
+    <span class="arr">→</span>
+    <span>Gate 2</span>
+    <span class="arr">→</span>
+    <span>初稿撰写</span>
+    <span class="arr">→</span>
+    <span>Phase 5<br>同行评审<br>范文校准</span>
+    <span class="arr">→</span>
+    <span>Gate 5</span>
+    <span class="arr">→</span>
+    <span>Phase 6<br>路由修订<br>交付</span>
+  </div>
+
+  <p style="text-align:center;font-size:0.85rem;color:var(--muted)">图1：核心管线（Phase 3 实证设计和 Phase 4 数据图表对纯理论论文自动跳过）</p>
+
+  <table>
+    <thead>
+      <tr><th>阶段</th><th>核心任务</th><th>产出</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Phase 1</td><td>用深度报道建立语境 → 从细节联想学术概念 → 学术数据库验证概念影响力 → 生成理论地图</td><td>理论地图</td></tr>
+      <tr><td>Phase 2</td><td>多数据库检索 → 引用来源交叉核验 → 每篇文献标注来源数据库</td><td>文献综述 + 参考文献表</td></tr>
+      <tr><td>初稿撰写</td><td>论证结构搭建 → 文献整合 → 概念展开 → 案例铺陈 → 全文初稿</td><td>完整初稿</td></tr>
+      <tr><td>Phase 5</td><td>多角色模拟评审 + 同类型范文论证结构对照</td><td>评审报告 + 范文差距报告</td></tr>
+      <tr><td>Phase 6</td><td>按弱点路由表定向修复 → 重新评审 → 最多 5 轮迭代</td><td>最终定稿（HTML）</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===== 3. 语境锚点法 ===== -->
+<section>
+  <h2>三、语境锚点法：消除理论联想的随机性</h2>
+
+  <p>这是 Phase 1 中最核心的设计决策。它的基本逻辑是：AI 对抽象概念有丰富的训练数据，但对具体情境缺乏脉络感。直接让它从"一个社会现象的名称"跳跃到"适合的理论框架"，中间缺失了一个关键环节——<strong>理解这个现象中具体发生了什么</strong>。</p>
+
+  <h3>3.1 操作路径</h3>
+  <ol>
+    <li><strong>研究者用日常语言描述关注的现象</strong>，不需要使用学术概念。</li>
+    <li><strong>搜索与现象相关的深度报道。</strong> 这一步的关键是不要求报道与现象完全匹配。例如，研究者关注的是"研究生群体中普遍存在的隐形劳动"，但公开报道可能以"高校青年教师的职业倦怠"为切入点——症状接近，有公开报道即可作为锚点。过早上强限定反而会缩小 AI 的联想范围。</li>
+    <li><strong>AI 从报道中提取语境要素。</strong> 具体来说：报道中涉及的行动者是谁、他们处于什么社会位置、面临什么制度性或结构性约束、有什么利益或价值冲突。这一步建立的是"画面感"。</li>
+    <li><strong>基于语境细节进行概念联想。</strong> AI 不再从"隐形劳动"这个标签出发，而是从"报道中描述的具体情境"出发——例如"个体在无明确制度规定的情况下被期待承担额外工作，且不承担则面临隐性惩罚"——这可能会联接到"组织行为学中的角色外行为""劳动社会学中的情感劳动""制度主义中的非正式制度"等多个方向。</li>
+    <li><strong>学术数据库验证。</strong> 将联想出的概念丢入学术数据库（如 Google Scholar、Semantic Scholar），按引用量排序。选择影响力较大的概念构建理论地图，避免过早收敛到小众概念。</li>
+  </ol>
+
+  <h3>3.2 为什么是深度报道</h3>
+  <p>深度报道——或其他等效的案例材料（田野笔记、政策文件、机构报告）——有几个特点使其适合作为语境锚点：(1) 它提供了行动者、情境、约束和冲突的多维度信息，恰好对应社会科学分析的基本单位；(2) 它已经过记者或研究者的初步梳理，信息密度高于原始资料；(3) 它是公开可得的，不需要额外的伦理审查。局限性在于：某些敏感议题可能缺乏高质量的公开报道，此时需要使用替代锚点材料。</p>
+
+  <blockquote>
+    这一方法的名称来自孙宇凡（2026）提出的"AI 赋能理论框架三步法"，其核心主张是：AI 辅助理论联想的质量取决于输入材料的语境丰富度，而非提示词的精细程度。
+  </blockquote>
+</section>
+
+<!-- ===== 4. 范文后置校准 ===== -->
+<section>
+  <h2>四、范文后置校准：让论证从材料中生长，而非从范文中复制</h2>
+
+  <p>AI 辅助写作中一个常见的做法是将范文作为"模板"输入给 AI，让它按照范文的结构填充内容。这种做法有两个隐患。第一，不同研究问题的最优论证结构可能不同——一篇理论建构型的论文和一篇实证检验型的论文，其论证展开的逻辑不一样。套用他人的结构，等同于默认了他人对论证合理性的判断标准，而未经验证。第二，范文的领域可能与研究者的领域不同，机械套用会压制跨学科对话和概念创新的空间。</p>
+
+  <p>这套技能将范文的位置从"前置模板"调整为"后置校准"：</p>
+
+  <ol>
+    <li><strong>初稿阶段不引入范文。</strong> 论证结构完全由 Phase 1 的理论方向和 Phase 2 的文献材料驱动，确保论证逻辑是从研究问题本身"长出来"的。</li>
+    <li><strong>初稿完成后，确定研究贡献类型。</strong> 分为四类：新兴现象的理论建构、经典理论争论的实证检验、跨学科框架引入、新方法/新数据创新。不同类型的论文在顶刊中的论证结构有规律可循。</li>
+    <li><strong>按贡献类型搜索 3-5 篇同类型顶刊范文。</strong> 不限制主题领域，只要求贡献类型相同。</li>
+    <li><strong>拆解范文的论证结构，对照初稿。</strong> 提取的不是范文的"理论内容"，而是论证结构的骨架——论点如何推进、反论点如何处理、证据如何组织。对照初稿，识别差距。</li>
+  </ol>
+
+  <p>这个设计的核心判断是：<strong>范文的价值在于展示"同类型问题的论证标准"，而不是提供"论证结构的现成模板"。</strong></p>
+
+  <blockquote>
+    这一方法的设计参考了孙宇凡（2026）"AI 仿写顶刊四步法"中关于范文位置的关键判断：范文不进主流程，只做对照校准。
+  </blockquote>
+</section>
+
+<!-- ===== 5. 质量关卡 ===== -->
+<section>
+  <h2>五、质量关卡与弱点路由：定向修复而非全文重写</h2>
+
+  <h3>5.1 质量关卡</h3>
+  <p>每两个阶段之间设一道关卡，不通过则不能进入下一阶段。关卡不做硬性数值阈值（如"引用数量必须大于 20"），因为不同研究类型的需求差异很大——一篇纯理论论文可能只需要 15 篇核心引用，而一篇系统综述可能需要 60 篇以上。硬性数值会鼓励凑数。</p>
+
+  <table>
+    <thead><tr><th>关卡</th><th>位置</th><th>检查项</th></tr></thead>
+    <tbody>
+      <tr><td>Gate 1</td><td>Phase 1 → 2</td><td>深度报道已找到；语境提取覆盖行动者、情境、约束、冲突；概念联想有报道细节支撑；学术数据库验证通过</td></tr>
+      <tr><td>Gate 2</td><td>Phase 2 → 初稿</td><td>数据库已实际调用；引用来源可验证（标注来自哪个数据库）；核心文献覆盖到位</td></tr>
+      <tr><td>Gate 初稿</td><td>初稿 → 5</td><td>论证结构完整；文献整合与案例铺陈充分；全文达到目标字数的 80% 以上</td></tr>
+      <tr><td>Gate 5</td><td>Phase 5 → 6</td><td>所有已运行 Gate 通过；评审未发现关键缺陷；范文对照无结构性差距</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.2 弱点路由表</h3>
+  <p>Phase 5 的评审团队——模拟期刊的编辑（EIC）、方法论审稿人、领域理论审稿人、数据与引用审计人、以及扮演 Devil's Advocate 的前提攻击者——会对初稿进行全面审查。发现的问题不是笼统地返回让 AI "全文修改"，而是按一张路由表定向分发：</p>
+
+  <table>
+    <thead><tr><th>评审发现</th><th>路由目标</th><th>修复方式</th></tr></thead>
+    <tbody>
+      <tr><td>概念联想缺乏语境支撑</td><td>Phase 1</td><td>重新搜索深度报道，加强语境锚定</td></tr>
+      <tr><td>引用覆盖不足 / 关键文献缺失</td><td>Phase 2</td><td>定向补充特定主题的文献</td></tr>
+      <tr><td>章节结构混乱 / 逻辑跳跃</td><td>Phase 6</td><td>重组章节顺序、增加过渡段落</td></tr>
+      <tr><td>分析深度不足</td><td>Phase 6</td><td>在特定位置增加批判性分析段落</td></tr>
+      <tr><td>论断过强 / 缺乏限定词</td><td>Phase 6</td><td>将绝对化表述降级为 hedge language</td></tr>
+      <tr><td>与范文论证标准差距大</td><td>Phase 6</td><td>针对差距报告中的具体条目增强论证</td></tr>
+    </tbody>
+  </table>
+
+  <p>路由表的设计逻辑来自陈德里 DeliAutoResearch（2026）提出的"弱点路由"思想：将评审发现的问题类型化，每类问题指向一个明确的修复阶段和修复方式，以定向修补替代全文重试。这套技能在此基础上增加了修复轮次上限（最多 5 轮），防止无限迭代。</p>
+</section>
+
+<!-- ===== 6. 总结 ===== -->
+<section>
+  <h2>六、结语</h2>
+
+  <p>这套社科研究辅助技能的设计，围绕一个核心判断展开：<strong>在 AI 辅助研究的过程中，可以自动化的和不可以自动化的必须清晰区分。</strong></p>
+
+  <p>可以自动化的包括——文献检索与来源核验、引用格式管理、论证结构的对照检查、评审意见的分类与路由、格式调整与排版。这些环节的特点是：有明确的标准和可验证的产出，不需要研究者的创造性判断。</p>
+
+  <p>不可以自动化的包括——研究问题的选择（什么是值得研究的好问题）、理论框架的取舍（哪个视角更适合解释观察到的现象）、论点的裁决（论证是否成立、结论是否过度推广）。这些环节的共同特点是：需要在多重竞争的解释之间做出判断，而做出判断的依据往往不是某一条明确的规则，而是对领域文献的整体把握和对论证质量的直觉。</p>
+
+  <p>这套技能的设计目标，就是把第一类工作尽量系统化，把第二类工作中研究者的注意力保留在判断上。流程可编排、质量可检查、问题可定向修复——但最终的决定权始终在研究者手中。</p>
+
+  <blockquote>
+    <p><strong>设计原则：</strong>工序可自动化，判断必须保留在研究者手中。工具可以更换——阅读器可以换、执行环境可以换、编排逻辑可以重新实现——但"扩展阅读边界、提升执行效率、将重复性工序自动化"这个方向是跨工具的。</p>
+  </blockquote>
+</section>
+
+<section>
+  <h2>参考来源</h2>
+  <table>
+    <thead><tr><th>概念</th><th>来源</th></tr></thead>
+    <tbody>
+      <tr><td>迭代环 + 弱点路由表 + 质量关卡</td><td>陈德里，DeliAutoResearch (2026)</td></tr>
+      <tr><td>语境锚点法</td><td>孙宇凡，"AI 赋能理论框架三步法" (2026)</td></tr>
+      <tr><td>范文后置校准</td><td>孙宇凡，"AI 仿写顶刊四步法" (2026)</td></tr>
+      <tr><td>多角色模拟评审</td><td>Academic Research Skills v3.0</td></tr>
+      <tr><td>四索引交叉核验</td><td>Academic Research Skills v3.11.0</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="paper-footer">
+  <p>社科研究辅助技能：设计思路 · 2026 年 6 月</p>
+  <p>代码仓库：<a href="https://github.com/EnzoDing-rgb/research-assistant">github.com/EnzoDing-rgb/research-assistant</a></p>
+</div>
+
+</body>
+</html>

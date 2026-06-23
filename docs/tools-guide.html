@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>科研工具使用指南 · Vibero · OpenCode · Research Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;600&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #fbfaf5;
+  --ink: #111;
+  --muted: #5f5a50;
+  --blue: #d9e8f6;
+  --green: #dcead6;
+  --peach: #f5deb8;
+  --lavender: #e4dcf4;
+  --accent: #6b9fd4;
+  --font-hand: "Patrick Hand", "Ma Shan Zheng", "Noto Sans SC", cursive;
+  --font-body: "Noto Sans SC", system-ui, sans-serif;
+  --max: 820px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  padding: 48px 24px 80px;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 20px; left: 20px;
+  width: 36px; height: 36px;
+  opacity: 0.25;
+  background:
+    linear-gradient(var(--muted) 1px, transparent 1px) 0 0 / 6px 6px,
+    linear-gradient(90deg, var(--muted) 1px, transparent 1px) 0 0 / 6px 6px;
+  pointer-events: none;
+}
+
+.wrap { max-width: var(--max); margin: 0 auto; }
+
+header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+header .kicker {
+  font-family: var(--font-hand);
+  font-size: 20px;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+h1 {
+  font-family: var(--font-hand);
+  font-size: 2.4rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+h1::after {
+  content: "";
+  display: block;
+  width: 72px;
+  height: 3px;
+  margin: 14px auto 0;
+  background: var(--accent);
+  opacity: 0.6;
+  border-radius: 2px;
+}
+
+.subtitle {
+  font-family: var(--font-hand);
+  font-size: 1.15rem;
+  color: var(--muted);
+}
+
+.loop-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.loop-bar span {
+  font-family: var(--font-hand);
+  font-size: 0.95rem;
+  padding: 6px 14px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+}
+
+.loop-bar span:nth-child(1) { background: var(--blue); }
+.loop-bar span:nth-child(2) { background: var(--peach); }
+.loop-bar span:nth-child(3) { background: var(--lavender); }
+
+section {
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-family: var(--font-hand);
+  font-size: 1.65rem;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2 .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; height: 32px;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+h2 .num.n1 { background: var(--blue); }
+h2 .num.n2 { background: var(--peach); }
+h2 .num.n3 { background: var(--lavender); }
+
+.tagline {
+  font-family: var(--font-hand);
+  color: var(--muted);
+  margin-bottom: 16px;
+  font-size: 1.05rem;
+}
+
+.card {
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  padding: 24px 26px;
+  background: #fff;
+  box-shadow: 4px 4px 0 rgba(17,17,17,0.06);
+}
+
+.card p { margin-bottom: 12px; }
+.card p:last-child { margin-bottom: 0; }
+
+a {
+  color: #1a5fb4;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+a:hover { color: #0d3d7a; }
+
+.links {
+  list-style: none;
+  margin: 14px 0;
+}
+
+.links li {
+  margin-bottom: 8px;
+  padding-left: 0;
+}
+
+.links strong {
+  font-family: var(--font-hand);
+  font-weight: 600;
+}
+
+ol.steps, ul.bullets {
+  margin: 12px 0 12px 1.2em;
+}
+
+ol.steps li, ul.bullets li {
+  margin-bottom: 8px;
+}
+
+pre {
+  background: #1e1e1e;
+  color: #e8e8e8;
+  padding: 14px 18px;
+  border-radius: 10px;
+  overflow-x: auto;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: 12px 0;
+  border: 2px solid var(--ink);
+}
+
+code {
+  font-family: "SF Mono", "Fira Code", Consolas, monospace;
+}
+
+.inline-code {
+  background: var(--blue);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  border: 1px solid rgba(17,17,17,0.12);
+}
+
+.note {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-left: 3px solid var(--accent);
+  background: var(--blue);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.95rem;
+}
+
+.note.warn {
+  background: var(--peach);
+  border-left-color: #d66f4d;
+}
+
+hr {
+  border: none;
+  border-top: 1.5px dashed var(--muted);
+  margin: 48px 0;
+  opacity: 0.4;
+}
+
+footer {
+  text-align: center;
+  font-family: var(--font-hand);
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-top: 32px;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.8rem; }
+  .card { padding: 18px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">How to do Research</p>
+  <h1>科研工具使用指南</h1>
+  <p class="subtitle">① 读 · ② 做 · ③ 串 — 三个工具拼成科研闭环</p>
+  <div class="loop-bar">
+    <span>① Vibero · 扩展上下文</span>
+    <span>② OpenCode · 提升执行力</span>
+    <span>③ Research Assistant · 全流程编排</span>
+  </div>
+</header>
+
+<!-- ① Vibero -->
+<section id="vibero">
+  <h2><span class="num n1">1</span> Vibero · 氛围阅读</h2>
+  <p class="tagline">先读文献、扩展上下文 — 非线性阅读，先见森林再见树木</p>
+  <div class="card">
+    <p><strong>是什么：</strong>AI 论文阅读器，把静态 PDF 变成可交互的画布；支持结构解析、点选追问、笔记留在画布上。</p>
+
+    <ul class="links">
+      <li><strong>官网（中文）：</strong> <a href="https://vibero.dev/cn" target="_blank" rel="noopener">https://vibero.dev/cn</a></li>
+      <li><strong>国际版：</strong> <a href="https://vibero.dev" target="_blank" rel="noopener">https://vibero.dev</a></li>
+    </ul>
+
+    <p><strong>安装 / 获取：</strong></p>
+    <ol class="steps">
+      <li>打开 <a href="https://vibero.dev/cn" target="_blank" rel="noopener">vibero.dev/cn</a></li>
+      <li>点击页面上的 <strong>「下载 Vibero」</strong>，按你的系统（macOS / Windows）下载安装包</li>
+      <li>安装后注册账号，即可导入 PDF 开始阅读</li>
+    </ol>
+
+    <p><strong>推荐用法：</strong></p>
+    <ul class="bullets">
+      <li>打开一篇论文 → 等待 <strong>VIBE 解析</strong> 生成左侧结构树</li>
+      <li>先浏览整体论点，再点选段落向 AI 追问</li>
+      <li>把有价值的问答拖回画布，形成自己的阅读笔记层</li>
+    </ul>
+
+    <div class="note">
+      国内使用大部分功能不需要科学上网；仅在使用 GitHub 代码库问答时，境内可能需要 VPN。
+    </div>
+  </div>
+</section>
+
+<!-- ② OpenCode -->
+<section id="opencode">
+  <h2><span class="num n2">2</span> OpenCode · AI 编程 Agent</h2>
+  <p class="tagline">再落地执行 — 用 Agent 跑脚本、处理数据、自动化研究工序</p>
+  <div class="card">
+    <p><strong>是什么：</strong>开源 AI Agent，可在终端、桌面或 IDE 里读项目、改文件、多步执行任务；内置免费模型，也可接入 GPT、Gemini 等。</p>
+
+    <ul class="links">
+      <li><strong>下载页（中文）：</strong> <a href="https://opencode.ai/zh/download" target="_blank" rel="noopener">https://opencode.ai/zh/download</a></li>
+      <li><strong>官网：</strong> <a href="https://opencode.ai" target="_blank" rel="noopener">https://opencode.ai</a></li>
+      <li><strong>文档：</strong> <a href="https://opencode.ai/docs" target="_blank" rel="noopener">https://opencode.ai/docs</a></li>
+      <li><strong>GitHub：</strong> <a href="https://github.com/anomalyco/opencode" target="_blank" rel="noopener">github.com/anomalyco/opencode</a></li>
+    </ul>
+
+    <p><strong>安装方式（任选其一）：</strong></p>
+
+    <p>终端版 — 全平台通用（推荐课堂统一用这个）：</p>
+    <pre><code>curl -fsSL https://opencode.ai/install | bash</code></pre>
+
+    <p>其他常见方式：</p>
+    <pre><code># npm
+npm i -g opencode-ai
+
+# Homebrew（macOS / Linux）
+brew install anomalyco/tap/opencode
+
+# 桌面版 Beta（macOS / Windows / Linux）
+# 见下载页直接下载 .dmg / .exe / .deb
+brew install --cask opencode-desktop   # macOS</code></pre>
+
+    <p>完整下载选项（桌面版、VS Code / Cursor 插件等）见官方下载页：<br>
+    <a href="https://opencode.ai/zh/download" target="_blank" rel="noopener">opencode.ai/zh/download</a></p>
+
+    <p><strong>安装后第一步：</strong></p>
+    <ol class="steps">
+      <li>终端输入 <span class="inline-code">opencode</span> 启动（或打开桌面版）</li>
+      <li>按提示连接模型（可用内置免费模型，或填入自己的 API Key）</li>
+      <li>在一个项目目录里，用自然语言描述任务，例如：「帮我对这份 CSV 做描述统计」</li>
+    </ol>
+
+    <div class="note">
+      Windows 用户：官方推荐用 <strong>WSL</strong> 获得最佳体验；也可直接下载桌面版 Beta。
+    </div>
+  </div>
+</section>
+
+<!-- ③ Research Assistant -->
+<section id="research-assistant">
+  <h2><span class="num n3">3</span> Research Assistant · 科研全流程 Skill</h2>
+  <p class="tagline">最后串起来 — 把读和做编排成一条可重复的研究管线</p>
+  <div class="card">
+    <p><strong>是什么：</strong>一套科研全流程 Skill，覆盖研究设计 → 文献搜索 → 结构写作 → 同行评审 → 修订交付；带质量门禁和弱点路由，不过关不往下走。</p>
+
+    <ul class="links">
+      <li><strong>GitHub 仓库：</strong> <a href="https://github.com/EnzoDing-rgb/research-assistant" target="_blank" rel="noopener">github.com/EnzoDing-rgb/research-assistant</a></li>
+      <li><strong>核心 Skill 文件：</strong> <a href="https://github.com/EnzoDing-rgb/research-assistant/blob/main/research-skills.md" target="_blank" rel="noopener">research-skills.md</a></li>
+      <li><strong>示例 · 世界模型综述：</strong> <a href="https://github.com/EnzoDing-rgb/research-assistant/tree/main/examples/world-model" target="_blank" rel="noopener">examples/world-model</a></li>
+    </ul>
+
+    <p><strong>获取代码：</strong></p>
+    <pre><code>git clone https://github.com/EnzoDing-rgb/research-assistant.git
+cd research-assistant</code></pre>
+
+    <p><strong>在 OpenCode 里使用（推荐）：</strong></p>
+    <ol class="steps">
+      <li>克隆仓库后，把 <span class="inline-code">research-skills.md</span> 复制到你项目的 Skill 目录（OpenCode 会读取项目级或全局 Skill）</li>
+      <li>在 OpenCode 里打开你的研究项目目录</li>
+      <li>对 Agent 说：「按照 research-skills 的流程，帮我做一篇关于 XXX 的文献综述」</li>
+      <li>Agent 会按阶段推进：设计 → 文献 → 结构 → 评审 → 交付，每阶段有明确产出</li>
+    </ol>
+
+    <p><strong>在 Claude Code 里使用（可选）：</strong></p>
+    <ol class="steps">
+      <li>需先安装 <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank" rel="noopener">Claude Code CLI</a></li>
+      <li>进入克隆好的 <span class="inline-code">research-assistant</span> 目录</li>
+      <li>运行一键安装依赖：<pre><code>bash setup.sh</code></pre>
+        会安装 Academic Research Skills、Ralph Loop 等插件（OpenSpec 可选）</li>
+      <li>在 Claude Code 中输入：「用社科研究助手」+ 你的研究问题</li>
+    </ol>
+
+    <p><strong>管线架构（了解即可）：</strong></p>
+    <pre><code>研究设计 → 文献搜索 → 实验设计 → 图表 &amp; 结构 → 同行评审 → 路由修订 → 交付
+   ↑           ↑           ↑            ↑           │
+   └───────────┴───────────┴────────────┴───────────┘
+                    弱点路由表（定向修复，非盲目重试）</code></pre>
+
+    <div class="note warn">
+      <strong>和 OpenCode 的关系：</strong>Research Assistant 本质是 Skill（方法论 + 工作流指令），OpenCode 是执行它的 Agent 环境。把 Skill 装进 OpenCode，就和 Vibero 的阅读能力拼成完整闭环。
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<section id="workflow">
+  <h2 style="justify-content:center">推荐使用顺序</h2>
+  <div class="card" style="text-align:center;font-family:var(--font-hand);font-size:1.15rem;line-height:2">
+    <strong>① Vibero</strong> 读文献、建上下文<br>
+    ↓<br>
+    <strong>② OpenCode</strong> 跑数据、写脚本、做整理<br>
+    ↓<br>
+    <strong>③ Research Assistant</strong> 编排全流程、产出综述 / 报告<br>
+    ↓<br>
+    <span style="color:var(--muted)">（进阶彩蛋：Auto Research 全自动科研）</span>
+  </div>
+</section>
+
+<footer>
+  <p>科研方法分享 · 课程配套指南</p>
+  <p style="margin-top:8px;font-size:0.85rem">链接以各产品官网为准，如有更新请查看官方文档</p>
+</footer>
+
+</div>
+</body>
+</html>

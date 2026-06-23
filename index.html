@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 辅助科研方法</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;600&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #fbfaf5; --ink: #111; --muted: #5f5a50;
+  --blue: #d9e8f6; --peach: #f5deb8; --lavender: #e4dcf4; --accent: #6b9fd4;
+  --font-hand: "Patrick Hand", "Ma Shan Zheng", "Noto Sans SC", cursive;
+  --font-body: "Noto Sans SC", system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--font-body); line-height: 1.7;
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 40px 24px;
+}
+body::before, body::after {
+  content: ""; position: fixed; width: 32px; height: 32px; opacity: 0.18;
+  background: linear-gradient(var(--muted) 1px, transparent 1px) 0 0 / 6px 6px,
+              linear-gradient(90deg, var(--muted) 1px, transparent 1px) 0 0 / 6px 6px;
+  pointer-events: none;
+}
+body::before { top: 24px; left: 24px; }
+body::after  { bottom: 24px; right: 24px; }
+main { max-width: 600px; text-align: center; }
+h1 { font-family: var(--font-hand); font-size: 2.4rem; margin-bottom: 12px; }
+h1::after { content: ""; display: block; width: 64px; height: 3px; margin: 16px auto 0; background: var(--accent); opacity: 0.55; border-radius: 2px; }
+.subtitle { font-family: var(--font-hand); color: var(--muted); font-size: 1.1rem; margin-bottom: 40px; }
+.links { display: flex; flex-direction: column; gap: 16px; }
+.links a {
+  display: block; padding: 18px 24px; border: 2px solid var(--ink); border-radius: 12px;
+  text-decoration: none; color: var(--ink); font-family: var(--font-hand); font-size: 1.15rem;
+  transition: background 0.15s; box-shadow: 3px 3px 0 rgba(0,0,0,0.05);
+}
+.links a:nth-child(1) { background: var(--blue); }
+.links a:nth-child(2) { background: var(--peach); }
+.links a:nth-child(3) { background: var(--lavender); }
+.links a:hover { opacity: 0.85; }
+.links a .desc { display: block; font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+footer { margin-top: 48px; font-family: var(--font-hand); color: var(--muted); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>AI 辅助科研方法</h1>
+  <p class="subtitle">读得更宽 · 做得更快 · 流程可编排</p>
+  <div class="links">
+    <a href="docs/report.html">
+      设计报告
+      <span class="desc">工具链、设计思路与 PPT 内容总结</span>
+    </a>
+    <a href="docs/deck-slides.pdf">
+      PPT 演示文稿 (PDF)
+      <span class="desc">9 页幻灯片 · 可直接下载</span>
+    </a>
+    <a href="deck/index.html">
+      PPT 演示文稿 (HTML)
+      <span class="desc">浏览器翻页查看</span>
+    </a>
+  </div>
+</main>
+<footer>
+  <p>Enzo Ding · 2026</p>
+</footer>
+</body>
+</html>

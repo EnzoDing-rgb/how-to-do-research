@@ -1,0 +1,5 @@
+.agents/
+open-guide.sh
+skills-lock.json
+start.sh
+*.log
